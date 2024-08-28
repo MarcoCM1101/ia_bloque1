@@ -23,7 +23,7 @@ def predictjson():
         data['alcohol'],
     ])
     # Predecir utilixando la entrada y el modelo
-    result = dt.predict([input_data.reshape(-1, -1)])
+    result = dt.predict([input_data.reshape(1, -1)])
     # Return the result
     return jsonify({'Prediction': result.str(result[0])})
 
