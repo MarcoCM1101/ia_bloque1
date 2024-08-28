@@ -1,7 +1,7 @@
 # Python Libraries
 from flask import Flask, request, jsonify, render_template
 import numpy as np
-import load as joblib
+import joblib
 import os
 from werkzeug.utils import secure_filename
 
