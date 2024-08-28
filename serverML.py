@@ -18,7 +18,7 @@ def predictjson():
     data = request.get_json()
     print(data)
     input_data = np.array([
-        data['¡pH'],
+        data['pH'],
         data['sulphates'],
         data['alcohol'],
     ])
