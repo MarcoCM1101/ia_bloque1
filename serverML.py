@@ -3,29 +3,43 @@ from flask_cors import CORS
 import pandas as pd
 import numpy as np
 import joblib
+import os
 
-# Flask App
+# Cargar el modelo
 dt = joblib.load('gb1.joblib')
 
-# Create Flask App
+# Crear Flask App
 server = Flask(__name__)
 
 CORS(server)
 
-# Función para transformar datos
+# Ruta del archivo CSV donde se almacenarán las predicciones
+csv_file_path = 'predicciones.csv'
+
+# Función para guardar predicciones en el CSV
 
 
-def transform_data(X_test):
-    X_test['HomePlanet'] = X_test['HomePlanet'].astype('category').cat.codes
-    X_test['Side'] = X_test['Side'].astype('category').cat.codes
-    X_test['VIP'] = X_test['VIP'].astype('category').cat.codes
-    X_test['Destination'] = X_test['Destination'].astype('category').cat.codes
-    X_test['CryoSleep'] = X_test['CryoSleep'].astype('category').cat.codes
+def save_prediction(data, prediction):
+    # Verifica si el archivo CSV ya existe
+    if os.path.exists(csv_file_path):
+        df = pd.read_csv(csv_file_path)
+    else:
+        # Si el archivo no existe, crea un DataFrame vacío
+        df = pd.DataFrame(columns=['HomePlanet', 'CryoSleep', 'Destination', 'Age', 'VIP',
+                                   'RoomService', 'FoodCourt', 'ShoppingMall', 'Spa', 'VRDeck',
+                                   'Spent', 'Zona', 'Side', 'Prediction'])
 
-    print(X_test['CryoSleep'])
-    # print("aqui", X_test)
+    # Agrega la predicción a los datos de entrada
+    data['Prediction'] = prediction
 
-    return X_test
+    # Crear un DataFrame temporal con la nueva fila
+    new_row = pd.DataFrame(data, index=[0])
+
+    # Usar pd.concat() para agregar la nueva fila al DataFrame existente
+    df = pd.concat([df, new_row], ignore_index=True)
+
+    # Guarda el DataFrame actualizado en el archivo CSV
+    df.to_csv(csv_file_path, index=False)
 
 # Ruta para predecir usando JSON
 
@@ -40,12 +54,14 @@ def predict():
         df = pd.DataFrame(data, index=[0])
         print("here", df)
 
-        # Transformar datos
+        # Transformar datos (si es necesario, descomentar transform_data)
         # df2 = transform_data(df)
         # print("here2", df2)
 
+        # Realizar la predicción
         result = dt.predict(df)
-    # Convertir el resultado en un mensaje de texto
+
+        # Convertir el resultado en un mensaje de texto
         if result[0] == 1:
             prediction_message = "Se ha transportado"
         elif result[0] == 0:
@@ -55,6 +71,9 @@ def predict():
 
         print(result[0])
         print(prediction_message)
+
+        # Guardar la predicción en el archivo CSV
+        save_prediction(data, result[0])
 
         # Retornar la respuesta JSON
         return jsonify({'Prediction': prediction_message})
