@@ -11,9 +11,9 @@ dt = joblib.load('gb1.joblib')
 # Crear Flask App
 server = Flask(__name__)
 
-# CORS(server)
-CORS(server, resources={
-     r"/*": {"origins": "https://7453-148-241-64-15.ngrok-free.app"}})
+CORS(server)
+# CORS(server, resources={
+#      r"/*": {"origins": "https://7453-148-241-64-15.ngrok-free.app"}})
 
 # Ruta del archivo CSV donde se almacenarán las predicciones
 csv_file_path = 'predicciones.csv'
