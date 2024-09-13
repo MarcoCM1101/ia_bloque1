@@ -90,4 +90,4 @@ def predict():
 
 
 if __name__ == '__main__':
-    server.run(debug=True, host='0.0.0.0', port=8080)
+    server.run(debug=True, port=8080)
