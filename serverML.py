@@ -89,5 +89,29 @@ def predict():
         return jsonify({'error': 'Error en el procesamiento de los datos', 'details': str(e)}), 500
 
 
+@server.route('webhook', method=['POST'])
+def webhook():
+    try:
+        data = request.get_json()
+        print(data)
+
+        return
+    except ValueError as ve:
+
+        return
+
+
+@server.route('webhook/HealthCheck', method=['POST'])
+def webhookHealth():
+    try:
+        data = request.get_json()
+        print(data)
+
+        return
+    except ValueError as ve:
+
+        return
+
+
 if __name__ == '__main__':
     server.run(debug=True, host='0.0.0.0', port=8080)
