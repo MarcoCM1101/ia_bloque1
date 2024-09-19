@@ -89,7 +89,7 @@ def predict():
         return jsonify({'error': 'Error en el procesamiento de los datos', 'details': str(e)}), 500
 
 
-@server.route('webhook', methods=['POST'])
+@server.route('/webhook', methods=['POST'])
 def webhook():
     try:
         data = request.get_json()
@@ -101,7 +101,7 @@ def webhook():
         return
 
 
-@server.route('webhook/HealthCheck', methods=['POST'])
+@server.route('/webhook/HealthCheck', methods=['POST'])
 def webhookHealth():
     try:
         data = request.get_json()
